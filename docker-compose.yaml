@@ -1,0 +1,14 @@
+services:
+
+  db:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: 1
+      MYSQL_DATABASE: K-Telecom
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - 3306:3306
+    volumes:
+      - ./dbconfig:/docker-entrypoint-initdb.d
