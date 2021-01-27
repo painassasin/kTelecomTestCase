@@ -6,7 +6,7 @@
 	</div>
 
 	{# ... table section ...#}
-		<table class="table table-sm small text-sm-center">
+		<table class="table table-sm small text-sm-center table-hover">
 			<thead>
 				<tr>
 					<th scope="col">Наименование контрагента</th>
@@ -20,6 +20,7 @@
 					<th scope="col">Дата заявки</th>
 					<th scope="col">От куда узнали об услугаx</th>
 					<th scope="col">Ответственный менеджер</th>
+					<th></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -36,6 +37,9 @@
 					<td>{{ row.data_of_request }}</td>
 					<td>{{ row.information_source }}</td>
 					<td>{{ row.responsible_manager }}</td>
+					<td>
+						<input type="button" value="Delete" class="delete_button"/>
+					</td>
 				</tr>
 				{% endfor %}
 			</tbody>
