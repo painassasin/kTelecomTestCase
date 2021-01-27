@@ -1,7 +1,10 @@
 from app import app
-from app.api import select_all_records
+from app.actions import Counterparties
+from flask import render_template
 
 
 @app.route('/')
 def index() -> str:
-    return select_all_records()
+    table = Counterparties()
+    table_dict = table.to_dict()
+    return render_template('view.html', table=table_dict.values())

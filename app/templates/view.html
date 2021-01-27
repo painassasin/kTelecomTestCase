@@ -1,0 +1,46 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+	<div class="text-center">
+		<h1 class="display-3 mt-4 mb-4">Контрагенты</h1>
+	</div>
+
+	{# ... table section ...#}
+		<table class="table table-sm small text-sm-center">
+			<thead>
+				<tr>
+					<th scope="col">Наименование контрагента</th>
+					<th scope="col">Тип контрагента</th>
+					<th scope="col">VIP клиент</th>
+					<th scope="col">Нас. пункт</th>
+					<th scope="col">Тип услуги</th>
+					<th scope="col">Адес VLAN от</th>
+					<th scope="col">Адес VLAN до</th>
+					<th scope="col">Ширина канала</th>
+					<th scope="col">Дата заявки</th>
+					<th scope="col">От куда узнали об услугаx</th>
+					<th scope="col">Ответственный менеджер</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for row in table %}
+				<tr id="row_{{ row.id }}">
+					<td>{{ row.name }}</td>
+					<td>{{ row.type }}</td>
+					<td>{{ row.vip }}</td>
+					<td>{{ row.locality }}</td>
+					<td>{{ row.service_type }}</td>
+					<td>{{ row.vlan_address_from }}</td>
+					<td>{{ row.vlan_address_to }}</td>
+					<td>{{ row.channel_width }}</td>
+					<td>{{ row.data_of_request }}</td>
+					<td>{{ row.information_source }}</td>
+					<td>{{ row.responsible_manager }}</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+
+	{# ... end table section ...#}
+
+{% endblock %}

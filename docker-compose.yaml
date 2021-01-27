@@ -8,7 +8,10 @@ services:
       MYSQL_DATABASE: K-Telecom
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASSWORD}
+      LANG: C.UTF-8
+
     ports:
       - 3306:3306
     volumes:
-      - ./dbconfig:/docker-entrypoint-initdb.d
+      - ./mysql-entrypoint:/docker-entrypoint-initdb.d
+

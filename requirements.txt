@@ -1,3 +1,4 @@
 flask
-dotenv
+python-dotenv
 mysql-connector-python
+pandas
