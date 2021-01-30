@@ -48,3 +48,20 @@ class Counterparties:
         records = self._select_all_records()
         df = pd.DataFrame(records, columns=columns)
         return df.T.to_dict()
+
+    @staticmethod
+    def delete_row(row_id: int) -> bool:
+        try:
+            with UseDatabase(app.config['DB_CREDENTIALS']) as cursor:
+                _SQL = f"""
+                    DELETE FROM counterparties t
+                    WHERE t.id = {row_id}
+                """
+                cursor.execute(_SQL)
+                return True
+        except (ConnectionError, CredentialsError, SyntaxError):
+            return False
+        except Exception as err:
+            print(err)
+            return False
+

@@ -6,7 +6,8 @@
 	</div>
 
 	{# ... table section ...#}
-		<table class="table table-sm small text-sm-center table-hover">
+	{% if table %}
+		<table id="counterparties_view" class="table table-sm small text-sm-center table-hover">
 			<thead>
 				<tr>
 					<th scope="col">Наименование контрагента</th>
@@ -44,7 +45,36 @@
 				{% endfor %}
 			</tbody>
 		</table>
-
+	{% else %}
+		<div class="text-center">
+			<p class="lead text-muted">There is no any counterparties yet</p>
+		</div>
+	{% endif %}
 	{# ... end table section ...#}
 
+{% endblock %}
+
+{% block script %}
+	$('#counterparties_view').on('click', 'input.delete_button', function() {
+		var row = $(this).parents('tr');
+		var confirmation = confirm('Are you sure you want to delete this row?');
+		if (confirmation == true) {
+			$.ajax({
+				url: "{{ url_for('delete_row') }}",
+				type: 'POST',
+				contentType: 'application/json',
+				headers: {
+					'X-CSRFToken': '{{ csrf_token() }}',
+				},
+				data: JSON.stringify({
+					id: parseInt(row.attr('id').split('row_')[1]),
+				}),
+				success: function(result) {
+					if (result['success'] == true) {
+				    row.remove();
+					}
+				}
+			});
+		}
+	});
 {% endblock %}
