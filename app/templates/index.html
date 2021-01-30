@@ -35,11 +35,13 @@
 					<td>{{ row.vlan_address_from }}</td>
 					<td>{{ row.vlan_address_to }}</td>
 					<td>{{ row.channel_width }}</td>
-					<td>{{ row.data_of_request }}</td>
+					<td>{{ row.date_of_request }}</td>
 					<td>{{ row.information_source }}</td>
 					<td>{{ row.responsible_manager }}</td>
 					<td>
-						<input type="button" value="Delete" class="delete_button"/>
+						<input type="button" value="Удалить" class="delete_button"/>
+						<br><br>
+						<input type="button" value="Изменить" />
 					</td>
 				</tr>
 				{% endfor %}

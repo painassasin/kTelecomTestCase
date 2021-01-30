@@ -1,0 +1,68 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+	<form action="" method="post" class="m-3" role="form" novalidate>
+		{{ form.csrf_token() }}
+		<div class="form-group">
+			{{ form.cp_name.label }} {{ form.cp_name(class="form-control") }}
+		</div>
+		<div class="form-group">
+			{{ form.cp_type.label }}
+			<select class='custom-select'>
+				{% for ch in form.cp_type.choices %}
+					<option value="{{ ch[0] }}">{{ ch[1] }}</option>
+				{% endfor %}
+			</select>
+		</div>
+		<div class="form-check">
+			{{ form.cp_vip(class="form-check-input") }} {{ form.cp_vip.label }}
+		</div>
+		<div class="form-group">
+			{{ form.cp_location.label }} {{ form.cp_location(class="form-control") }}
+		</div>
+		<div class="form-group">
+			{{ form.cp_service_type.label }}
+			<select class='custom-select'>
+				{% for ch in form.cp_service_type.choices %}
+					<option value="{{ ch[0] }}">{{ ch[1] }}</option>
+				{% endfor %}
+			</select>
+		</div>
+		<div class="form-group">
+			{{ form.cp_vlan_address_to.label }}
+			{{ form.cp_vlan_address_to(class='form-control', rows='1', placeholder=form.cp_vlan_address_to.description) }}
+		</div>
+		<div class="form-group">
+			{{ form.cp_vlan_address_from.label }}
+			{{ form.cp_vlan_address_from(class='form-control', rows='1', placeholder=form.cp_vlan_address_to.description) }}
+		</div>
+		<div class="form-group">
+			{{ form.cp_channel_width.label }}
+			<select class='custom-select'>
+				{% for ch in form.cp_channel_width.choices %}
+					<option value="{{ ch[0] }}">{{ ch[1] }}</option>
+				{% endfor %}
+			</select>
+		</div>
+		<div class="form-group">
+			{{ form.cp_request_date.label }}
+			{{ form.cp_request_date(type='date', class="form-control") }}
+		</div>
+		<div class="form-group">
+			{{ form.cp_information_source.label }}
+			{{ form.cp_information_source(class='form-control', rows='2') }}
+		</div>
+		<div class="form-group">
+			{{ form.cp_responsible_manager.label }}
+			<select class='custom-select'>
+				{% for ch in form.cp_responsible_manager.choices %}
+					<option value="{{ ch[0] }}">{{ ch[1] }}</option>
+				{% endfor %}
+			</select>
+		</div>
+		{{ form.submit(class='btn btn-dark btn-block') }}
+	</form>
+
+
+{% endblock %}
