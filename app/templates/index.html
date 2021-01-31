@@ -38,10 +38,12 @@
 					<td>{{ row.date_of_request }}</td>
 					<td>{{ row.information_source }}</td>
 					<td>{{ row.responsible_manager }}</td>
-					<td>
+					<td class="button_group">
 						<input type="button" value="Удалить" class="delete_button"/>
 						<br><br>
-						<input type="button" value="Изменить" />
+						<a href="{{ url_for('update_row', row_id=row.id) }}">
+							<input type="button" value="Изменить" class="update_button" />
+						</a>
 					</td>
 				</tr>
 				{% endfor %}

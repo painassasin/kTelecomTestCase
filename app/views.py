@@ -1,7 +1,6 @@
 from app import app
-from app.counterparties import values_to_dict, delete_record, get_managers
-from app.counterparties import get_types, get_service_types, get_channel_width
-from flask import render_template, request, jsonify
+from app.counterparties import values_to_dict, delete_record, get_row
+from flask import render_template, request, jsonify, redirect, url_for
 from app.forms import EditCounterpartiesForm
 
 
@@ -20,12 +19,15 @@ def delete_row():
     return jsonify({'success': success})
 
 
-@app.route('/update')
-def update_row():
+@app.route('/update/<int:row_id>', methods=['GET', 'POST'])
+def update_row(row_id):
     form = EditCounterpartiesForm()
-    form.cp_type.choices = get_types()
-    form.cp_service_type.choices = get_service_types()
-    form.cp_channel_width.choices = get_channel_width()
-    form.cp_responsible_manager.choices = get_managers()
+    if form.validate_on_submit():
+        print(form.data)
+        return redirect(url_for('index'))
+    row_data = get_row(row_id)
+    if row_data:
+        form = EditCounterpartiesForm(**row_data)
+
     return render_template('edit_row.html', form=form)
 

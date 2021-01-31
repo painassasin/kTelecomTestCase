@@ -115,5 +115,24 @@ def get_managers() -> list:
         return []
 
 
-
-
+def get_row(row_id: int) -> dict:
+    try:
+        with UseDatabase(app.config['DB_CREDENTIALS']) as cursor:
+            _SQL = f"""
+                SELECT 
+                    t.id, t.name, t.type, t.vip, dl.locality, t.service_type,
+                    t.vlan_address_from, t.vlan_address_to, 
+                    t.channel_width, t.date_of_request,
+                    dsi.description, t.responsible_manager
+                FROM counterparties t
+                LEFT JOIN d_locality dl ON t.locality = dl.id
+                LEFT JOIN d_source_of_information dsi 
+                    ON t.information_source = dsi.id
+                WHERE t.id={row_id}
+            """
+            cursor.execute(_SQL)
+            data = cursor.fetchall()
+            if data:
+                return dict(zip(_get_column_names(), data[0]))
+    except (ConnectionError, CredentialsError):
+        return dict()
