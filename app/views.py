@@ -1,5 +1,5 @@
 from app import app
-from app.counterparties import values_to_dict, delete_record, get_row
+from app.counterparties import values_to_dict, delete_record, get_row, update_row_data
 from flask import render_template, request, jsonify, redirect, url_for
 from app.forms import EditCounterpartiesForm
 
@@ -23,8 +23,8 @@ def delete_row():
 def update_row(row_id):
     form = EditCounterpartiesForm()
     if form.validate_on_submit():
-        print(form.data)
-        return redirect(url_for('index'))
+        update_row_data(row_id, form.data)
+        # return redirect(url_for('index'))
     row_data = get_row(row_id)
     if row_data:
         form = EditCounterpartiesForm(**row_data)

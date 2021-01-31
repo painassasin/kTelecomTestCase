@@ -27,7 +27,7 @@ CREATE TABLE d_channel_width
 CREATE TABLE d_source_of_information
 (
     id INT AUTO_INCREMENT,
-    description VARCHAR(255) NOT NULL,
+    description VARCHAR(255) NOT NULL UNIQUE,
     PRIMARY KEY(id)
 );
 CREATE TABLE d_managers

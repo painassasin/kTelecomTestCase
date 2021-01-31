@@ -136,3 +136,78 @@ def get_row(row_id: int) -> dict:
                 return dict(zip(_get_column_names(), data[0]))
     except (ConnectionError, CredentialsError):
         return dict()
+
+
+def update_row_data(row_id: int, form_data: dict) -> bool:
+    form_data.update({
+        'vip': int(form_data['vip']),
+        'locality': _get_locality_id(form_data['locality']),
+        'information_source': _get_source_id(form_data['information_source']),
+    })
+    try:
+        with UseDatabase(app.config['DB_CREDENTIALS']) as cursor:
+            _SQL = f"""
+            UPDATE counterparties t
+            SET
+                name='{form_data['name']}', 
+                type='{form_data['type']}',
+                vip='{form_data['vip']}',
+                locality='{form_data['locality']}',
+                service_type='{form_data['service_type']}',
+                vlan_address_from='{form_data['vlan_address_from']}',
+                vlan_address_to='{form_data['vlan_address_to']}',
+                channel_width='{form_data['channel_width']}',
+                date_of_request='{form_data['date_of_request']}',
+                information_source='{form_data['information_source']}',
+                responsible_manager='{form_data['responsible_manager']}'
+            WHERE t.id={row_id}
+            """
+            cursor.execute(_SQL)
+            return True
+    except (ConnectionError, CredentialsError, SyntaxError) as err:
+        print(err)
+        return False
+
+
+def _get_locality_id(locality: str) -> int:
+    try:
+        with UseDatabase(app.config['DB_CREDENTIALS']) as cursor:
+            _SQL_INSERT = f"""
+                INSERT IGNORE INTO d_locality(locality) 
+                VALUES('{locality}')
+            """
+            _SQL_SELECT = f"""
+                SELECT dl.id FROM d_locality dl
+                WHERE dl.locality='{locality}' LIMIT 1
+            """
+            cursor.execute(_SQL_INSERT)
+            cursor.execute(_SQL_SELECT)
+            locality_id = cursor.fetchone()
+            if locality_id:
+                return locality_id[0]
+    except (ConnectionError, CredentialsError) as err:
+        print(err)
+
+
+def _get_source_id(description: str) -> int:
+    try:
+        with UseDatabase(app.config['DB_CREDENTIALS']) as cursor:
+            _SQL_INSERT = f"""
+                INSERT IGNORE INTO d_source_of_information(description) 
+                VALUES('{description}');
+            """
+            _SQL_SELECT = f"""
+                SELECT dsi.id FROM d_source_of_information dsi
+                WHERE dsi.description='{description}' LIMIT 1
+            """
+            cursor.execute(_SQL_INSERT)
+            cursor.execute(_SQL_SELECT)
+            source_id = cursor.fetchone()
+            if source_id:
+                return source_id[0]
+    except (ConnectionError, CredentialsError) as err:
+        print(err)
+
+
+
+
