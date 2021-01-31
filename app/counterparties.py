@@ -144,23 +144,14 @@ def update_row_data(row_id: int, form_data: dict) -> bool:
         'locality': _get_locality_id(form_data['locality']),
         'information_source': _get_source_id(form_data['information_source']),
     })
+    form_data.pop('submit')
+    form_data.pop('csrf_token')
     try:
         with UseDatabase(app.config['DB_CREDENTIALS']) as cursor:
             _SQL = f"""
-            UPDATE counterparties t
-            SET
-                name='{form_data['name']}', 
-                type='{form_data['type']}',
-                vip='{form_data['vip']}',
-                locality='{form_data['locality']}',
-                service_type='{form_data['service_type']}',
-                vlan_address_from='{form_data['vlan_address_from']}',
-                vlan_address_to='{form_data['vlan_address_to']}',
-                channel_width='{form_data['channel_width']}',
-                date_of_request='{form_data['date_of_request']}',
-                information_source='{form_data['information_source']}',
-                responsible_manager='{form_data['responsible_manager']}'
-            WHERE t.id={row_id}
+                UPDATE counterparties
+                SET {', '.join(f"{k}='{form_data[k]}'" for k in form_data)}
+                WHERE id = {row_id}
             """
             cursor.execute(_SQL)
             return True

@@ -41,3 +41,5 @@ class UseDatabase:
         self.conn.commit()
         self.cursor.close()
         self.conn.close()
+        if exc_type == mysql.connector.errors.ProgrammingError:
+            raise SyntaxError(exc_value)

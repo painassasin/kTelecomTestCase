@@ -23,11 +23,11 @@ def delete_row():
 def update_row(row_id):
     form = EditCounterpartiesForm()
     if form.validate_on_submit():
-        update_row_data(row_id, form.data)
-        # return redirect(url_for('index'))
+        result = update_row_data(row_id, form.data)
+        if result:
+            return redirect(url_for('index'))
     row_data = get_row(row_id)
     if row_data:
         form = EditCounterpartiesForm(**row_data)
-
     return render_template('edit_row.html', form=form)
 
