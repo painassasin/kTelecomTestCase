@@ -1,7 +1,7 @@
-from app.DBcm import UseDatabase
-from app.DBcm import ConnectionError, CredentialsError, SyntaxError
-from app import app
 import pandas as pd
+
+from app import app
+from app.DBcm import UseDatabase, ConnectionError, CredentialsError, SyntaxError
 
 
 def get_records() -> list:
@@ -58,7 +58,7 @@ def get_row(row_id: int) -> dict:
                     t.id, t.name, t.type, t.vip, dl.locality, t.service_type,
                     t.vlan_address_from, t.vlan_address_to, 
                     t.channel_width, t.date_of_request,
-                    dsi.description, t.responsible_manager
+                    dsi.description information_source, t.responsible_manager
                 FROM counterparties t
                 LEFT JOIN d_locality dl ON t.locality = dl.id
                 LEFT JOIN d_source_of_information dsi 

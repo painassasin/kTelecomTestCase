@@ -28,6 +28,7 @@ def update_row(row_id):
             return redirect(url_for('index'))
     row_data = get_row(row_id)
     if row_data:
+        print(row_data)
         form = EditCounterpartiesForm(**row_data)
     return render_template('edit_row.html',
                            form=form,
