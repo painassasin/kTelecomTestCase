@@ -33,8 +33,9 @@ bootstrap, ajax, jQuery (не является обязательным)
 ```bash
 docker-compose up
 ```
-Теперь можно запускать веб-приложение
+Теперь нужно установить недостающие пакеты и запускать веб-приложение
 ```bash
+pip install -r requirements.txt
 export FLASK_APP=manage
 flask run
 ```
