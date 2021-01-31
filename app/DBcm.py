@@ -5,10 +5,6 @@ class CredentialsError(Exception):
     pass
 
 
-class DuplicationError(Exception):
-    pass
-
-
 class ConnectionError(Exception):
     pass
 
@@ -32,8 +28,6 @@ class UseDatabase:
                 raise CredentialsError(e)
             if e.args[0] == 1064:
                 raise SyntaxError(e)
-        except mysql.connector.errors.IntegrityError as e:
-            raise DuplicationError(e)
         except mysql.connector.errors.DatabaseError as e:
             raise ConnectionError(e)
 

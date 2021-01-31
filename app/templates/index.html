@@ -31,19 +31,20 @@
 					<td>{{ row.type }}</td>
 					<td>{{ row.vip }}</td>
 					<td>{{ row.locality }}</td>
-					<td>{{ row.service_type }}</td>
+					<td>{{ row.service }}</td>
 					<td>{{ row.vlan_address_from }}</td>
 					<td>{{ row.vlan_address_to }}</td>
 					<td>{{ row.channel_width }}</td>
 					<td>{{ row.date_of_request }}</td>
 					<td>{{ row.information_source }}</td>
 					<td>{{ row.responsible_manager }}</td>
-					<td class="button_group">
-						<input type="button" value="Удалить" class="delete_button"/>
-						<br><br>
-						<a href="{{ url_for('update_row', row_id=row.id) }}">
-							<input type="button" value="Изменить" class="update_button" />
-						</a>
+					<td>
+						<div class="btn-group-vertical">
+							<button type="button" class="btn btn-danger btn-sm mb-1">Удалить</button>
+							<a href="{{ url_for('update_row', row_id=row.id) }}" class="btn btn-warning btn-sm" role="button">
+								Изменить
+							</a>
+						</div>
 					</td>
 				</tr>
 				{% endfor %}
@@ -59,7 +60,7 @@
 {% endblock %}
 
 {% block script %}
-	$('#counterparties_view').on('click', 'input.delete_button', function() {
+	$('#counterparties_view').on('click', 'button', function() {
 		var row = $(this).parents('tr');
 		var confirmation = confirm('Are you sure you want to delete this row?');
 		if (confirmation == true) {

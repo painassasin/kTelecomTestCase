@@ -1,29 +1,20 @@
 from app.DBcm import UseDatabase
-from app.DBcm import ConnectionError, CredentialsError, DuplicationError, SyntaxError
+from app.DBcm import ConnectionError, CredentialsError, SyntaxError
 from app import app
 import pandas as pd
 
 
-def _get_column_names() -> list:
-    try:
-        with UseDatabase(app.config['DB_CREDENTIALS']) as cursor:
-            _SQL = f'SHOW COLUMNS FROM counterparties'
-            cursor.execute(_SQL)
-            return [i[0] for i in cursor.fetchall()]
-    except (ConnectionError, CredentialsError):
-        return []
-
-
-def _select_all_records() -> list:
+def get_records() -> list:
     try:
         with UseDatabase(app.config['DB_CREDENTIALS']) as cursor:
             _SQL = """
                 SELECT
                     t.id, t.name, dct.type, vip, dl.locality, dst.service,
                     t.vlan_address_from, t.vlan_address_to,
-                    CONCAT(chw.width,' ', chw.units), 
-                    DATE_FORMAT(date_of_request, '%d-%m-%Y'),
-                    dsi.description, CONCAT(dm.surname,' ', dm.name)
+                    CONCAT(chw.width,' ', chw.units) channel_width, 
+                    DATE_FORMAT(date_of_request, '%d-%m-%Y') date_of_request,
+                    dsi.description information_source, 
+                    CONCAT(dm.surname,' ', dm.name) responsible_manager
                 FROM
                     counterparties t
                 LEFT JOIN d_counterparty_type dct ON t.type = dct.id
@@ -35,16 +26,11 @@ def _select_all_records() -> list:
                 LEFT JOIN d_managers dm ON t.responsible_manager = dm.id
                     """
             cursor.execute(_SQL)
-            return cursor.fetchall()
+            records = cursor.fetchall()
+            df = pd.DataFrame(records, columns=cursor.column_names)
+            return df.T.to_dict()
     except (ConnectionError, CredentialsError):
         return []
-
-
-def values_to_dict() -> dict:
-    columns = _get_column_names()
-    records = _select_all_records()
-    df = pd.DataFrame(records, columns=columns)
-    return df.T.to_dict()
 
 
 def delete_record(row_id: int) -> bool:
@@ -55,64 +41,13 @@ def delete_record(row_id: int) -> bool:
                 WHERE t.id = {row_id}
             """
             cursor.execute(_SQL)
+            print(f'Row #{row_id} successfully deleted')
             return True
     except (ConnectionError, CredentialsError, SyntaxError):
         return False
     except Exception as err:
         print(err)
         return False
-
-
-def get_types() -> list:
-    try:
-        with UseDatabase(app.config['DB_CREDENTIALS']) as cursor:
-            _SQL = f"""
-                SELECT t.id, t.type
-                FROM d_counterparty_type t
-            """
-            cursor.execute(_SQL)
-            return cursor.fetchall()
-    except (ConnectionError, CredentialsError):
-        return []
-
-
-def get_service_types() -> list:
-    try:
-        with UseDatabase(app.config['DB_CREDENTIALS']) as cursor:
-            _SQL = f"""
-                SELECT t.id, t.service
-                FROM d_service_type t
-            """
-            cursor.execute(_SQL)
-            return cursor.fetchall()
-    except (ConnectionError, CredentialsError):
-        return []
-
-
-def get_channel_width() -> list:
-    try:
-        with UseDatabase(app.config['DB_CREDENTIALS']) as cursor:
-            _SQL = f"""
-                SELECT t.id, CONCAT(t.width, ' ', t.units) width
-                FROM d_channel_width t
-            """
-            cursor.execute(_SQL)
-            return cursor.fetchall()
-    except (ConnectionError, CredentialsError):
-        return []
-
-
-def get_managers() -> list:
-    try:
-        with UseDatabase(app.config['DB_CREDENTIALS']) as cursor:
-            _SQL = f"""
-                SELECT t.id, CONCAT(t.surname, ' ', t.name) manager
-                FROM d_managers t
-            """
-            cursor.execute(_SQL)
-            return cursor.fetchall()
-    except (ConnectionError, CredentialsError):
-        return []
 
 
 def get_row(row_id: int) -> dict:
@@ -133,12 +68,12 @@ def get_row(row_id: int) -> dict:
             cursor.execute(_SQL)
             data = cursor.fetchall()
             if data:
-                return dict(zip(_get_column_names(), data[0]))
+                return dict(zip(cursor.column_names, data[0]))
     except (ConnectionError, CredentialsError):
         return dict()
 
 
-def update_row_data(row_id: int, form_data: dict) -> bool:
+def update_record(row_id: int, form_data: dict) -> bool:
     form_data.update({
         'vip': int(form_data['vip']),
         'locality': _get_locality_id(form_data['locality']),
@@ -164,7 +99,7 @@ def _get_locality_id(locality: str) -> int:
     try:
         with UseDatabase(app.config['DB_CREDENTIALS']) as cursor:
             _SQL_INSERT = f"""
-                INSERT IGNORE INTO d_locality(locality) 
+                INSERT IGNORE INTO d_locality(locality)
                 VALUES('{locality}')
             """
             _SQL_SELECT = f"""
@@ -198,7 +133,3 @@ def _get_source_id(description: str) -> int:
                 return source_id[0]
     except (ConnectionError, CredentialsError) as err:
         print(err)
-
-
-
-

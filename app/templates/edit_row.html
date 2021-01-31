@@ -1,44 +1,34 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-
-	<form action="" method="post" class="m-3" role="form" novalidate>
+<div class="row justify-content-center">
+	<div class="text-center">
+		<h1 class="display-4 mt-4 mb-4">{{ title }}</h1>
+	</div>
+	
+	<form action="" method="post" class="w-75" role="form">
 		{{ form.csrf_token() }}
-		<div class="form-group">
-			{{ form.name.label }} {{ form.name }}
+		<div class="form-row mb-3">
+			<div class="col-md-7">{{ form.name.label }} {{ form.name }}</div>
+			<div class="col-md-3">{{ form.locality.label }} {{ form.locality }}</div>
+			<div class="col-md-2">{{ form.type.label }} {{ form.type }}</div>
 		</div>
-		<div class="form-group">
-			{{ form.type.label }} {{ form.type }}
+		<div class="form-row mb-3">
+			<div class="col-md-3">{{ form.service_type.label }} {{ form.service_type }}</div>
+			<div class="col-md-3">{{ form.channel_width.label }} {{ form.channel_width }}</div>
+			<div class="col-md-3">{{ form.date_of_request.label }} {{ form.date_of_request }}</div>
+			<div class="col-md-3">{{ form.responsible_manager.label }} {{ form.responsible_manager }}</div>
 		</div>
-		<div class="form-check">
-			{{ form.vip }} {{ form.vip.label }}
+		<div class="form-row mb-3">
+			<div class="col-md-6">{{ form.vlan_address_from.label }} {{ form.vlan_address_from }}</div>
+			<div class="col-md-6">{{ form.vlan_address_to.label }} {{ form.vlan_address_to }}</div>
 		</div>
-		<div class="form-group">
-			{{ form.locality.label }} {{ form.locality }}
-		</div>
-		<div class="form-group">
-			{{ form.service_type.label }} {{ form.service_type }}
-		</div>
-		<div class="form-group">
-			{{ form.vlan_address_from.label }} {{ form.vlan_address_from }}
-		</div>
-		<div class="form-group">
-			{{ form.vlan_address_to.label }} {{ form.vlan_address_to }}
-		</div>
-		<div class="form-group">
-			{{ form.channel_width.label }} {{ form.channel_width }}
-		</div>
-		<div class="form-group">
-			{{ form.date_of_request.label }} {{ form.date_of_request }}
-		</div>
-		<div class="form-group">
-			{{ form.information_source.label }} {{ form.information_source }}
-		</div>
-		<div class="form-group">
-			{{ form.responsible_manager.label }} {{ form.responsible_manager }}
-		</div>
+		<div class="form-group">{{ form.information_source.label }} {{ form.information_source }}</div>
+		<div class="form-group form-check">{{ form.vip }} {{ form.vip.label }}</div>
 		{{ form.submit }}
+		<a href="{{ url_for('index') }}" class="btn btn-secondary btn-block" role="button">
+			На главную
+		</a>
 	</form>
-
-
+</div>
 {% endblock %}
