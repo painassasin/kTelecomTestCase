@@ -4,7 +4,7 @@ from app import app
 from app.DBcm import UseDatabase, ConnectionError, CredentialsError, SyntaxError
 
 
-def get_records() -> list:
+def get_records() -> dict:
     try:
         with UseDatabase(app.config['DB_CREDENTIALS']) as cursor:
             _SQL = """
@@ -30,7 +30,7 @@ def get_records() -> list:
             df = pd.DataFrame(records, columns=cursor.column_names)
             return df.T.to_dict()
     except (ConnectionError, CredentialsError):
-        return []
+        return dict()
 
 
 def delete_record(row_id: int) -> bool:
